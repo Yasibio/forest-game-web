@@ -529,6 +529,18 @@ def download_log():
     response.headers["Content-Disposition"] = f"attachment; filename={filename}"
     response.headers["Content-Type"] = "text/csv"
     return response
+    
+from flask import jsonify
+
+@app.route('/game_status/<code>')
+def game_status(code):
+    """Return current turn and game‑over flag as JSON."""
+    entry = games.get(code)
+    if not entry or entry['model'] is None:
+        return jsonify(error="not_found"), 404
+    m = entry['model']
+    return jsonify(current_player=m.current_player, game_over=m.game_over)
+
 
 # If running this app.py directly (e.g., for local testing), start the Flask development server
 if __name__ == '__main__':

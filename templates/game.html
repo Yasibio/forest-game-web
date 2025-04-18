@@ -103,3 +103,22 @@
   </div>
 </div>
 {% endblock %}
+
+{% if player_role != game.current_player and not game.game_over %}
+<script>
+// Poll every 5s to see if turn changed or game ended
+;(function pollStatus(){
+  fetch("{{ url_for('game_status', code=code) }}")
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) return;
+      // If it's now your turn or the game ended, reload to show updated UI
+      if (data.current_player === {{ player_role }} || data.game_over) {
+        window.location.reload();
+      }
+    })
+    .catch(console.error)
+    .finally(() => setTimeout(pollStatus, 5000));
+})();
+</script>
+{% endif %}
