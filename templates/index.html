@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron text-center">
+  <h1 class="display-4">Forest Management Game</h1>
+  <p class="lead">Welcome! Manage a forest sustainably in this turn-based strategy game.</p>
+  <hr class="my-4">
+  <p>Choose an option to begin:</p>
+  <a class="btn btn-primary btn-lg mr-2" href="{{ url_for('start_game') }}">Start New Game</a>
+  <a class="btn btn-success btn-lg ml-2" href="{{ url_for('join_game') }}">Join Game</a>
+</div>
+{% endblock %}

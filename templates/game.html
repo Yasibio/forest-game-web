@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ scenario }} – Game Board</h2>
+<div class="mb-3">
+  <strong>Forest Trees Remaining: {{ model.forest }}</strong>
+</div>
+
+<!-- Player Status Panels -->
+<div class="row">
+  <div class="col-md-6 p-3 {% if current_index == 0 %}bg-info text-white{% endif %}">
+    <h4>Player 1: {{ p1['name'] or 'Player 1' }}</h4>
+    <p>Woodcutters: {{ player1.woodcutters }}<br>
+       Victory Points: {{ player1.victory_points }}<br>
+       Harvested Trees (this round): {{ player1.harvested_trees }}</p>
+  </div>
+  <div class="col-md-6 p-3 {% if current_index == 1 %}bg-info text-white{% endif %}">
+    <h4>Player 2: {{ p2['name'] or 'Player 2' }}</h4>
+    <p>Woodcutters: {{ player2.woodcutters }}<br>
+       Victory Points: {{ player2.victory_points }}<br>
+       Harvested Trees (this round): {{ player2.harvested_trees }}</p>
+  </div>
+</div>
+
+<!-- Action Buttons and Inputs -->
+{% set can_act = (player_index == current_index) %}
+{% set harvest_done = my_status.has_harvested %}
+<div class="mt-3">
+  <h5>Actions:</h5>
+  <!-- Harvest action (no input needed) -->
+  <form action="{{ url_for('action_harvest') }}" method="post" class="d-inline-block mr-2">
+    <button type="submit" class="btn btn-warning btn-sm"
+      {% if not can_act or harvest_done %}disabled{% endif %}>
+      Harvest
+    </button>
+  </form>
+
+  <!-- Replant action (requires input amount) -->
+  <form action="{{ url_for('action_replant') }}" method="post" class="d-inline-block mr-2">
+    <div class="input-group input-group-sm">
+      <input type="number" name="amount" min="1" max="{{ max_replant }}" class="form-control" placeholder="Replant"
+        {% if not can_act or not harvest_done or max_replant == 0 %}disabled{% endif %}>
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-secondary"
+          {% if not can_act or not harvest_done or max_replant == 0 %}disabled{% endif %}>
+          Replant
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Buy Victory Points action -->
+  <form action="{{ url_for('action_buy_vp') }}" method="post" class="d-inline-block mr-2">
+    <div class="input-group input-group-sm">
+      <input type="number" name="amount" min="1" max="{{ max_buy_vp }}" class="form-control" placeholder="Buy VP"
+        {% if not can_act or not harvest_done or max_buy_vp == 0 %}disabled{% endif %}>
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-secondary"
+          {% if not can_act or not harvest_done or max_buy_vp == 0 %}disabled{% endif %}>
+          Buy VP
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Buy Woodcutter action -->
+  <form action="{{ url_for('action_buy_wc') }}" method="post" class="d-inline-block mr-2">
+    <div class="input-group input-group-sm">
+      <input type="number" name="amount" min="1" max="{{ max_buy_wc }}" class="form-control" placeholder="Buy WC"
+        {% if not can_act or not harvest_done or max_buy_wc == 0 %}disabled{% endif %}>
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-secondary"
+          {% if not can_act or not harvest_done or max_buy_wc == 0 %}disabled{% endif %}>
+          Buy WC
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Exchange Woodcutter action -->
+  <form action="{{ url_for('action_exchange') }}" method="post" class="d-inline-block mr-2">
+    <button type="submit" class="btn btn-info btn-sm"
+      {% if not can_act or not harvest_done or my_status.woodcutters <= 1 or my_status.exchanges_this_round >= 2 %}disabled{% endif %}>
+      Exchange WC
+    </button>
+  </form>
+
+  <!-- End Turn action -->
+  <form action="{{ url_for('action_end_turn') }}" method="post" class="d-inline-block">
+    <button type="submit" class="btn btn-dark btn-sm"
+      {% if not can_act or not harvest_done %}disabled{% endif %}>
+      End Turn
+    </button>
+  </form>
+</div>
+
+<!-- Game Log Display -->
+<div class="mt-4">
+  <h5>Game Log:</h5>
+  <div class="border p-2 bg-light" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.9em;">
+    {% for msg in log %}
+      <div>{{ msg }}</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

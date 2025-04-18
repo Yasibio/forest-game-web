@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Join a Game</h2>
+<form method="post" action="{{ url_for('join_game') }}">
+  <div class="form-group">
+    <label for="game_code">Enter Game Code:</label>
+    <input type="text" name="game_code" id="game_code" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-success">Join</button>
+</form>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Forest Management Game</title>
+  <!-- Bootstrap CSS for styling -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container my-4">
+    <!-- Flash messages for user feedback -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-warning" role="alert">
+          {% for msg in messages %}
+            <div>{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

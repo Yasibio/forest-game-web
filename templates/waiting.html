@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Your Game Code: <code>{{ game_id }}</code></h2>
+<p>You chose the <strong>{{ scenario }}</strong> scenario.</p>
+<p class="mb-4">Waiting for Player 2 to join... Share the game code with the second player.</p>
+<p class="text-muted">This page will automatically redirect once Player 2 joins.</p>
+<!-- Poll the server every 3 seconds to check if Player 2 has joined -->
+<script>
+  setInterval(function() {
+    fetch("{{ url_for('game_status', game_id=game_id) }}")
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "ready") {
+          // Redirect to game page when the second player has joined
+          window.location.href = "{{ url_for('game_page') }}";
+        }
+      });
+  }, 3000);
+</script>
+{% endblock %}

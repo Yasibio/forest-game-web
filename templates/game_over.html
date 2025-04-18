@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Game Over – {{ scenario }}</h2>
+<p><strong>Final Scores:</strong></p>
+<ul>
+  <li>{{ p1['name'] or 'Player 1' }} (Player 1): {{ scores[0] }} VP</li>
+  <li>{{ p2['name'] or 'Player 2' }} (Player 2): {{ scores[1] }} VP</li>
+</ul>
+<p><strong>Winner: {{ winner }}</strong></p>
+
+<h4 class="mt-4">Game Feedback &amp; Log</h4>
+<p>You can enter any comments about the game and download the full game log:</p>
+<form method="post" action="{{ url_for('download_log') }}">
+  <div class="form-group">
+    <label for="comment">Comments (optional):</label>
+    <textarea name="comment" id="comment" class="form-control" rows="3"></textarea>
+  </div>
+  <!-- On submit, triggers download of the CSV log file -->
+  <button type="submit" class="btn btn-success">Download Game Log (CSV)</button>
+</form>
+{% endblock %}
